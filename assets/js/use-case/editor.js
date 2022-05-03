@@ -74,6 +74,10 @@ const _screenToSVGCoords = (x, y) => {
   return svgPoint;
 };
 
+
+const step = function(x,y) {
+  return DOMSvg.createSVGTransformFromMatrix(DOMSvg.createSVGMatrix().translate(x,y));
+}
 // Listeners
 // prev es5 func is used cos of 'this' overhead
 function handleMove(dx, dy, posX, posY, event) {
@@ -82,9 +86,17 @@ function handleMove(dx, dy, posX, posY, event) {
 
   // const { type } = highlightedNode;
   const { type } = dragNode;
+  if(type ==="g"){
+  console.log('typsee',this)
+    // console.log(step(svgPoint.x - delta.x ,svgPoint.y - delta.y ))
+    this.node.transform.baseVal.initialize(step(svgPoint.x - delta.x ,svgPoint.y - delta.y ));
+    // this.node.transform.baseVal.getItem(0).setTranslate(svgPoint.x - delta.x ,svgPoint.y - delta.y );
 
+  return;
+}
   const dxName = type === "circle" ? "cx" : "x";
   const dyName = type === "circle" ? "cy" : "y";
+        
   this.attr({
     [dxName]: svgPoint.x - delta.x,
     [dyName]: svgPoint.y - delta.y,
@@ -107,6 +119,9 @@ function handleStarted(x, y, event) {
       x: svgPoint.x - this.attr("cx"),
       y: svgPoint.y - this.attr("cy"),
     };
+  }else if(type === "g"){
+    delta = { x: svgPoint.x - this.node.transform.baseVal.getItem(0).matrix.e, y: svgPoint.y - this.node.transform.baseVal.getItem(0).matrix.f };
+        
   } else {
     delta = { x: svgPoint.x - this.attr("x"), y: svgPoint.y - this.attr("y") };
   }
@@ -400,6 +415,7 @@ const handleSvgProcess = async (event) => {
 };
 const drag = (event)=>{
   if(addNav){
+
       let svgPoint = _screenToSVGCoords(event.clientX, event.clientY);
        hoverNav.setAttribute('x' ,svgPoint.x-80)
        hoverNav.setAttribute('y' ,svgPoint.y-80)
@@ -427,6 +443,7 @@ if(dragNode && dragNode?.id !== highlightedNode?.id){
   let isNav = event.target.closest(".navigation")
 
   if(!!isNav){
+    console.log('aywa hna')
      target = isNav
   }
   if ((!!isNav|| isCircleOrImage) && event.target !== highlightedNode?.node) {
@@ -463,9 +480,9 @@ const doHighlight = (event) => {
   
   if(!!isNav){
     navNode = isNav 
-    console.log('/////////////////')
-    
-    navNode.getElementById('border').style.fill = "rgb(0, 119, 255)"
+
+
+    navNode.querySelector('#border').style.fill = "rgb(0, 119, 255)"
     // let rectanglButton=isNav.nextElementSibling
     // let isVisible=rectanglButton.getAttribute("visible")
     // if(isVisible ==="on"){
@@ -574,7 +591,8 @@ highlightedNode.node.setAttribute('height',height)
 const clearExistedHighlight = (event) => {
   if(navNode){
 
-    navNode.getElementById('border').style.fill = "rgb(255, 255, 255)";
+    console.log("n",navNode)
+    navNode.querySelector('#border').style.fill = "rgb(255, 255, 255)";
     navNode =null;
   }
   if (highlightedNode) {
@@ -601,6 +619,7 @@ const handleSvgControls = (event) => {
     doNavCreate(event);
     return;
   }
+  console.log('click')
 
   clearExistedHighlight();
     doHighlight(event);
@@ -724,7 +743,7 @@ const addNavigationFunction =(nav )=>{
     document.getElementsByClassName("notification50centralizercontainer")[0].parentElement.remove();
       nav.setAttribute("navLink", sessionName[0])
       nav.setAttribute("isNewLink", "off")
-      nav.getElementById("text").innerHTML = sessionName[1]
+      nav.querySelector("#text").innerHTML = sessionName[1]
       // nav.getElementById("dd").innerHTML = "To "
       
       return;
@@ -738,7 +757,7 @@ const addNavigationFunction =(nav )=>{
               document.getElementsByClassName("notification50centralizercontainer")[0].parentElement.remove();
                nav.setAttribute("navLink", newLink)
                nav.setAttribute("isNewLink", "on")
-               nav.getElementById("text").innerHTML = arr[arr.length-1]
+               nav.querySelector("#text").innerHTML = arr[arr.length-1]
               //  nav.getElementById("dd").innerHTML = "To "
               }else{
                 let errorMsg = "please add a Valid GoBrunch link";
@@ -841,7 +860,7 @@ exports.rotate = () => {
   initializerWithoutClearHighlight();
   if(navNode){
     let angle = +navNode.getAttribute('rotate') || 0
-    let arrow = navNode.getElementById('nav---container');
+    let arrow = navNode.querySelector('#nav---container');
     console.log(arrow)
     angle===360?angle=0:''
     angle+=45
@@ -984,13 +1003,13 @@ const doNavCreate=(event)=>{
       addNav =false
       navid++
       DOMSvg.insertAdjacentHTML('beforeend' ,navBuilder(navid , svgPoint))
-     let node = document.querySelector(`#buttonNum${navid}`)
-     node.addEventListener("mouseenter",()=>{
-        node.querySelector("#button-rectangle").style.visibility="visible"
-      })
-      node.addEventListener("mouseleave",()=>{
-       node.querySelector("#button-rectangle").style.visibility="hidden"
-     })
+    //  let node = document.querySelector(`#buttonNum${navid}`)
+    //  node.addEventListener("mouseenter",()=>{
+    //     node.querySelector("#button-rectangle").style.visibility="visible"
+    //   })
+    //   node.addEventListener("mouseleave",()=>{
+    //    node.querySelector("#button-rectangle").style.visibility="hidden"
+    //  })
 
 };
 

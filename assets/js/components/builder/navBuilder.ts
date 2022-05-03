@@ -18,8 +18,8 @@ export let hoverNavBuilder=(svgPoint:{x:number,y:number})=>{
 
 export let navBuilder=(navid:any,svgPoint:{x:number,y:number})=>{
     return `
-    <svg version="1.1" class ="navigation" id="navNum${navid}" navidsession="session" x=${svgPoint.x-80} y=${svgPoint.y-80}
-    viewBox="0 0 139 125" xmlns="http://www.w3.org/2000/svg" width="196" height="130" >
+    <g class ="navigation" id="navNum${navid}" navidsession="session"  
+    xmlns="http://www.w3.org/2000/svg" transform="translate(${svgPoint.x-80}, ${svgPoint.y-80})"  >
      <g id="nav---arrow" transform="matrix(1, 0, 0, 1, 28.047913, 55.21907)">
      <g id="nav---container"">
        <path id="border" d="M32.875,-0.469 C51.100,-0.469 65.875,14.306 65.875,32.531 C65.875,50.757 51.100,65.531 32.875,65.531 C14.650,65.531 -0.125,50.757 -0.125,32.531 C-0.125,14.306 14.650,-0.469 32.875,-0.469 z" fill="#FFFFFF" opacity="0.702"/>
@@ -28,13 +28,14 @@ export let navBuilder=(navid:any,svgPoint:{x:number,y:number})=>{
      </g>
      </g>
     
-     <foreignObject id="buttonNum${navid}"  width="160" height="160">
+     <foreignObject id="test"  width="160" height="160">
      
       <div id="button-rectangle" class="brunchbuttontooltip">
            <div class="buttontooltiplabel" id="text">This is a button with content</div>
       </div>
     </foreignObject>
-     </svg>`
+    
+     </style=>`
 }
 // export let navBuilder=(navid:any,svgPoint:{x:number,y:number})=>{
 //     return `

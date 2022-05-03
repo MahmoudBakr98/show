@@ -15,8 +15,8 @@
 }
 
 #button-rectangle {visibility:hidden;}
- /* #test:hover>#button-rectangle{visibility:visible;} */
-
+ #test:hover>#button-rectangle{visibility:visible;}
+.navigation:hover #button-rectangle{visibility:visible;}
 .brunchbuttontooltip {
   position: absolute;
   left: 0%;
